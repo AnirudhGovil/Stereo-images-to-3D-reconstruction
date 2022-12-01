@@ -270,10 +270,7 @@ def reconstruction_3d(img_l_path, img_r_path,
         print("Algo error")
         assert(0)    
 
-    # renormalise
-    disparity_final, img_r_final = Preprocessing.intensity_offset_and_histogram_equalization(disparity, disparity)
-
-    return img_l, img_r, img_l_ep, img_r_ep, img_l_rect, img_r_rect, disparity, img_l_hist, img_r_hist, img_fil_l, img_fil_r, disparity_final
+    return img_l, img_r, img_l_ep, img_r_ep, img_l_rect, img_r_rect, disparity, img_l_hist, img_r_hist, img_fil_l, img_fil_r
 
 def disp_to_ply(img, calib, disp, ply_path):
 
