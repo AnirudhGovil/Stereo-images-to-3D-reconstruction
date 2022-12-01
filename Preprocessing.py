@@ -99,7 +99,7 @@ def intensity_offset_and_histogram_equalization(image_l, image_r, max_range_diff
     # cv2.imwrite('./preprocessing/left/pr.png', np.uint8(image_l))
     # cv2.imwrite('./preprocessing/right/pr.png', np.uint8(image_r))
 
-    return np.float64(image_l), np.float64(image_r)
+    return image_l, image_r
 
 
 def filter_application(left_image, right_image):

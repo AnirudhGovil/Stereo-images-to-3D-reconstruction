@@ -4,6 +4,8 @@ CV Project
 import cv2
 from matplotlib import pyplot as plt
 import numpy as np
+import Preprocessing
+import Disparity
 
 # header of ply file
 ply_header = '''ply
@@ -219,8 +221,14 @@ def reconstruction_3d(img_l_path, img_r_path,
     # assuming have the same size
     height, width = img_l.shape[:2]
 
+    # equalize histograms
+    img_l_hist, img_r_hist = Preprocessing.intensity_offset_and_histogram_equalization(img_l, img_r)
+
+    # filter
+    img_fil_l, img_fil_r = Preprocessing.filter_application(img_l_hist, img_r_hist)
+
     # find the features in images using SIFT, brute forcing match and knn
-    pts1, pts2 = feature_matching(img_l, img_r,
+    pts1, pts2 = feature_matching(img_fil_l, img_fil_r,
                                   sift_n_features, sift_sigma, edge,
                                   contrast, layers, threshold)
 
@@ -255,11 +263,14 @@ def reconstruction_3d(img_l_path, img_r_path,
     elif(algo == 'bm'):
         disparity = bm_disparity_compute(img_l_rect, img_r_rect, win_size, block_size,
                                             ratio, disp_max_diff, sp_range)
+    elif(algo == 'sad'):
+        disparity = Disparity.generate_disparity_map(img_l_rect, img_r_rect, name="sadImage", block_size=block_size)
+
     else:
         print("Algo error")
         assert(0)    
 
-    return img_l, img_r, img_l_ep, img_r_ep, img_l_rect, img_r_rect, disparity
+    return img_l, img_r, img_l_ep, img_r_ep, img_l_rect, img_r_rect, disparity, img_l_hist, img_r_hist, img_fil_l, img_fil_r
 
 def disp_to_ply(img, calib, disp, ply_path):
 

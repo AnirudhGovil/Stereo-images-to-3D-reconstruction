@@ -47,7 +47,7 @@ class Ui_MainWindow(object):
         self.label_3.setObjectName("label_3")
         self.form.addWidget(self.label_3)
 
-        # sgbm and bm
+        # algos
         self.sgbmButton = QtWidgets.QPushButton(self.verticalLayoutWidget)
         self.sgbmButton.setObjectName("sgbmButton")
         self.leftFileSelection.addWidget(self.sgbmButton)
@@ -55,6 +55,11 @@ class Ui_MainWindow(object):
         self.bmButton = QtWidgets.QPushButton(self.verticalLayoutWidget)
         self.bmButton.setObjectName("bmButton")
         self.leftFileSelection.addWidget(self.bmButton)
+
+        self.sadButton = QtWidgets.QPushButton(self.verticalLayoutWidget)
+        self.sadButton.setObjectName("sadButton")
+        self.leftFileSelection.addWidget(self.sadButton)
+
 
         self.siftParamsList = QtWidgets.QFormLayout()
         self.siftParamsList.setObjectName("siftParamsList")
@@ -167,6 +172,8 @@ class Ui_MainWindow(object):
         self.viewTypeCombo.addItem("")
         self.viewTypeCombo.addItem("")
         self.viewTypeCombo.addItem("")
+        self.viewTypeCombo.addItem("")
+        self.viewTypeCombo.addItem("")
         self.horizontalLayoutWidget = QtWidgets.QWidget(self.centralwidget)
         self.horizontalLayoutWidget.setGeometry(QtCore.QRect(320, 60, 841, 611))
         self.horizontalLayoutWidget.setObjectName("horizontalLayoutWidget")
@@ -210,6 +217,7 @@ class Ui_MainWindow(object):
 
         self.sgbmButton.setText(_translate("MainWindow", "Use SGBM"))
         self.bmButton.setText(_translate("MainWindow", "Use BM"))
+        self.sadButton.setText(_translate("MainWindow", "Use SAD"))
 
         self.edgeThresholdEdit.setText(_translate("MainWindow", "10"))
         self.label_4.setText(_translate("MainWindow", "<html><head/><body><p><span style=\" font-size:10pt;\">Sigma</span></p></body></html>"))
@@ -236,9 +244,11 @@ class Ui_MainWindow(object):
         self.spakleRangeLabel.setText(_translate("MainWindow", "<html><head/><body><p><span style=\" font-size:10pt;\">Spakle range</span></p></body></html>"))
         self.spakleEdit.setText(_translate("MainWindow", "5"))
         self.viewTypeCombo.setItemText(0, _translate("MainWindow", "Normal"))
-        self.viewTypeCombo.setItemText(1, _translate("MainWindow", "Epiolar geometry"))
-        self.viewTypeCombo.setItemText(2, _translate("MainWindow", "Rectified"))
-        self.viewTypeCombo.setItemText(3, _translate("MainWindow", "Disparity"))
+        self.viewTypeCombo.setItemText(1, _translate("MainWindow", "Histogram equalization"))
+        self.viewTypeCombo.setItemText(2, _translate("MainWindow", "Filter image"))
+        self.viewTypeCombo.setItemText(3, _translate("MainWindow", "Epiolar geometry"))
+        self.viewTypeCombo.setItemText(4, _translate("MainWindow", "Rectified"))
+        self.viewTypeCombo.setItemText(5, _translate("MainWindow", "Disparity"))
         self.defaultButton.setText(_translate("MainWindow", "Default"))
         self.okButton.setText(_translate("MainWindow", "OK"))
         self.generatePLYButton.setText(_translate("MainWindow", "Generate PLY"))

@@ -86,6 +86,7 @@ class Reconstruction3dGUI(QMainWindow, Ui_MainWindow):
 
         self.sgbmButton.clicked.connect(self.useSGBM)
         self.bmButton.clicked.connect(self.useBM)
+        self.sadButton.clicked.connect(self.useSAD)
 
     def useSGBM(self):
         self.algo = "sgbm"
@@ -94,6 +95,10 @@ class Reconstruction3dGUI(QMainWindow, Ui_MainWindow):
     def useBM(self):
         self.algo = "bm"
         print("bm")
+
+    def useSAD(self):
+        self.algo = "sad"
+        print("sad")
 
     def generatePLY(self):
         if self.disparity is None or self.calib_file is None or self.ply_out_path is None:
@@ -145,10 +150,14 @@ class Reconstruction3dGUI(QMainWindow, Ui_MainWindow):
         if   i == 0:
             self.set_view(self.img_l, self.img_r)
         elif i == 1:
-            self.set_view(self.img_l_ep, self.img_r_ep)
+            self.set_view(self.img_l_hist, self.img_r_hist)
         elif i == 2:
-            self.set_view(self.img_l_rect, self.img_r_rect)
+            self.set_view(self.img_l_fil, self.img_r_fil)
         elif i == 3:
+            self.set_view(self.img_l_ep, self.img_r_ep)
+        elif i == 4:
+            self.set_view(self.img_l_rect, self.img_r_rect)
+        elif i == 5:
             self.set_view(self.disparity)
 
     def set_view(self, img1, img2=None):
@@ -239,6 +248,10 @@ class Reconstruction3dGUI(QMainWindow, Ui_MainWindow):
         self.img_l_rect = result[4]
         self.img_r_rect = result[5]
         self.disparity = result[6]
+        self.img_l_hist = result[7]
+        self.img_r_hist = result[8]
+        self.img_l_fil = result[9]
+        self.img_r_fil = result[10]
 
         self.switch_view(self.viewTypeCombo.currentIndex())
 
