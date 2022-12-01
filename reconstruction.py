@@ -1,9 +1,9 @@
 """
 CV Project
 """
+import cv2
 from matplotlib import pyplot as plt
 import numpy as np
-import cv2 as cv
 
 # header of ply file
 ply_header = '''ply
@@ -54,15 +54,15 @@ def drawlines(img1, img2, lines, pts1, pts2):
         lines - corresponding epilines '''
     r, c = img1.shape
 
-    img1 = cv.cvtColor(img1, cv.COLOR_GRAY2BGR)
-    img2 = cv.cvtColor(img2, cv.COLOR_GRAY2BGR)
+    img1 = cv2.cvtColor(img1, cv2.COLOR_GRAY2BGR)
+    img2 = cv2.cvtColor(img2, cv2.COLOR_GRAY2BGR)
     for r, pt1, pt2 in zip(lines, pts1, pts2):
         color = tuple(np.random.randint(0, 255, 3).tolist())
         x0, y0 = map(int, [0, -r[2]/r[1]])
         x1, y1 = map(int, [c, -(r[2]+r[0]*c)/r[1] ])
-        img1 = cv.line(img1, (x0, y0), (x1, y1), color, 1)
-        img1 = cv.circle(img1, tuple(pt1), 5, color, -1)
-        img2 = cv.circle(img2, tuple(pt2), 5, color, -1)
+        img1 = cv2.line(img1, (x0, y0), (x1, y1), color, 1)
+        # img1 = cv2.circle(img1, tuple(pt1), 5, color, -1)
+        # img2 = cv2.circle(img2, tuple(pt2), 5, color, -1)
     return img1, img2
 
 def read_calib_file(fn, height, width):
@@ -87,7 +87,7 @@ def feature_matching(img_l, img_r, features=0, sift_sigma=1.6, edge=10,
 
     ''' find the best features matching '''
     # create a SIFT object
-    sift = cv.xfeatures2d.SIFT_create(nfeatures=features, nOctaveLayers=layers,
+    sift = cv2.SIFT_create(nfeatures=features, nOctaveLayers=layers,
                                       contrastThreshold=contrast, 
                                       edgeThreshold=edge, sigma=sift_sigma)
 
@@ -97,7 +97,7 @@ def feature_matching(img_l, img_r, features=0, sift_sigma=1.6, edge=10,
 
     # create BFMatcher object (brute force matching)
     # we preferred it to the flann matcher because flann it's pseudo-random
-    brute_force_match = cv.BFMatcher()
+    brute_force_match = cv2.BFMatcher()
     matches = brute_force_match.knnMatch(des1, des2, k=2)
 
     pts1 = []
@@ -120,13 +120,13 @@ def epipolar_geometry(img_l, img_r, fundamental_mat, pts1, pts2):
     ''' find and draw epilines '''
     # Find epilines corresponding to points in right image (second image) and
     # drawing its lines on left image
-    lines1 = cv.computeCorrespondEpilines(pts2.reshape(-1, 1, 2), 2, fundamental_mat)
+    lines1 = cv2.computeCorrespondEpilines(pts2.reshape(-1, 1, 2), 2, fundamental_mat)
     lines1 = lines1.reshape(-1, 3)
     img_l_ep, _ = drawlines(img_l, img_r, lines1, pts1, pts2)
 
     # Find epilines corresponding to points in left image (first image) and
     # drawing its lines on right image
-    lines2 = cv.computeCorrespondEpilines(pts1.reshape(-1, 1, 2), 1, fundamental_mat)
+    lines2 = cv2.computeCorrespondEpilines(pts1.reshape(-1, 1, 2), 1, fundamental_mat)
     lines2 = lines2.reshape(-1, 3)
     img_r_ep, _ = drawlines(img_r, img_l, lines2, pts2, pts1)
 
@@ -136,7 +136,7 @@ def sgbm_disparity_compute(img_l, img_r, win_size, block_size, ratio, disp_max_d
 
     window_size = 3
 
-    left_matcher = cv.StereoSGBM_create(minDisparity=16,
+    left_matcher = cv2.StereoSGBM_create(minDisparity=16,
                                         numDisparities=96,
                                         blockSize=block_size,
                                         P1=8*3*window_size**2,
@@ -146,15 +146,15 @@ def sgbm_disparity_compute(img_l, img_r, win_size, block_size, ratio, disp_max_d
                                         speckleWindowSize=win_size,
                                         speckleRange=sp_range,
                                         preFilterCap=63,
-                                        mode=cv.STEREO_SGBM_MODE_SGBM_3WAY)
+                                        mode=cv2.STEREO_SGBM_MODE_SGBM_3WAY)
 
-    right_matcher = cv.ximgproc.createRightMatcher(left_matcher)
+    right_matcher = cv2.ximgproc.createRightMatcher(left_matcher)
 
     # FILTER Parameters
     lmbda = 80000
     sigma = 1.2
 
-    wls_filter = cv.ximgproc.createDisparityWLSFilter(matcher_left=left_matcher)
+    wls_filter = cv2.ximgproc.createDisparityWLSFilter(matcher_left=left_matcher)
     wls_filter.setLambda(lmbda)
     wls_filter.setSigmaColor(sigma)
 
@@ -187,8 +187,8 @@ def reconstruction_3d(img_l_path, img_r_path,
     ''' Reconstruct a 3D scene from stereo image pairs. '''
 
     # read images
-    img_l = cv.imread(img_l_path, 0)
-    img_r = cv.imread(img_r_path, 0)
+    img_l = cv2.imread(img_l_path, 0)
+    img_r = cv2.imread(img_r_path, 0)
 
     # get height and width of the images
     # assuming have the same size
@@ -207,7 +207,7 @@ def reconstruction_3d(img_l_path, img_r_path,
         return False
 
     # find fundamental matrix using opencv built-in function
-    fundamental_mat, mask = cv.findFundamentalMat(pts1, pts2, cv.FM_LMEDS)
+    fundamental_mat, mask = cv2.findFundamentalMat(pts1, pts2, cv2.FM_LMEDS)
 
     # We select only inlier points
     pts1 = pts1[mask.ravel() == 1]
@@ -217,11 +217,11 @@ def reconstruction_3d(img_l_path, img_r_path,
     img_l_ep, img_r_ep = epipolar_geometry(img_l, img_r, fundamental_mat, pts1, pts2)
 
     # calculate the homographic matrices
-    _, h_1, h_2 = cv.stereoRectifyUncalibrated(pts1, pts2, fundamental_mat, (width, height))
+    _, h_1, h_2 = cv2.stereoRectifyUncalibrated(pts1, pts2, fundamental_mat, (width, height))
 
     # rectify the images
-    img_l_rect = cv.warpPerspective(img_l, h_1, (width, height))
-    img_r_rect = cv.warpPerspective(img_r, h_2, (width, height))
+    img_l_rect = cv2.warpPerspective(img_l, h_1, (width, height))
+    img_r_rect = cv2.warpPerspective(img_r, h_2, (width, height))
 
     # calculate disparity map and apply post-filtering operation
     disparity = sgbm_disparity_compute(img_l_rect, img_r_rect, win_size, block_size,
@@ -234,10 +234,10 @@ def disp_to_ply(img, calib, disp, ply_path):
     height, width = disp.shape[:2]
     # get matrix from calibration file
     Q = read_calib_file(calib, height, width)
-    points = cv.reprojectImageTo3D(-disp, -Q)
+    points = cv2.reprojectImageTo3D(-disp, -Q)
 
-    colors = cv.imread(img, cv.COLOR_RGB2BGR)
-    colors = cv.cvtColor(colors, cv.COLOR_RGB2BGR)
+    colors = cv2.imread(img, cv2.COLOR_RGB2BGR)
+    colors = cv2.cvtColor(colors, cv2.COLOR_RGB2BGR)
 
     mask = disp > disp.min()
     out_points = points[mask]

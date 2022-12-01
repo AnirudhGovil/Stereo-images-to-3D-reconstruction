@@ -1,3 +1,4 @@
+from reconstruction import reconstruction_3d, disp_to_ply
 import sys
 import os
 from PyQt5 import QtGui, QtCore
@@ -7,7 +8,6 @@ from gui import Ui_MainWindow
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as NavigationToolbar
 import matplotlib.pyplot as plt
-from reconstruction import reconstruction_3d, disp_to_ply
 
 f_name_format = '<html><head/><body><p><span style=" font-size:10pt;">{}</span></p></body></html>'
 mtch_format = '<html><head/><body><p><span style=" font-size:10pt;">{:.2f}</span></p></body></html>'
