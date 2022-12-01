@@ -159,6 +159,8 @@ class Reconstruction3dGUI(QMainWindow, Ui_MainWindow):
             self.set_view(self.img_l_rect, self.img_r_rect)
         elif i == 5:
             self.set_view(self.disparity)
+        elif i == 6:
+            self.set_view(self.disparity_final)
 
     def set_view(self, img1, img2=None):
         # delete old image
@@ -252,6 +254,7 @@ class Reconstruction3dGUI(QMainWindow, Ui_MainWindow):
         self.img_r_hist = result[8]
         self.img_l_fil = result[9]
         self.img_r_fil = result[10]
+        self.disparity_final = result[11]
 
         self.switch_view(self.viewTypeCombo.currentIndex())
 
