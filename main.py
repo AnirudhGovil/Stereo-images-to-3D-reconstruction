@@ -8,6 +8,8 @@ from gui import Ui_MainWindow
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as NavigationToolbar
 import matplotlib.pyplot as plt
+import cv2
+import numpy as np
 
 f_name_format = '<html><head/><body><p><span style=" font-size:10pt;">{}</span></p></body></html>'
 mtch_format = '<html><head/><body><p><span style=" font-size:10pt;">{:.2f}</span></p></body></html>'
@@ -159,6 +161,10 @@ class Reconstruction3dGUI(QMainWindow, Ui_MainWindow):
             self.set_view(self.img_l_rect, self.img_r_rect)
         elif i == 5:
             self.set_view(self.disparity)
+        elif i == 6:
+            clahe = cv2.createCLAHE(clipLimit=4.0, tileGridSize=(8,8))
+            res = clahe.apply(self.disparity.astype(np.uint16))
+            self.set_view(res)
 
     def set_view(self, img1, img2=None):
         # delete old image
