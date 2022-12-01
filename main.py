@@ -162,7 +162,7 @@ class Reconstruction3dGUI(QMainWindow, Ui_MainWindow):
         elif i == 5:
             self.set_view(self.disparity)
         elif i == 6:
-            clahe = cv2.createCLAHE(clipLimit=4.0, tileGridSize=(8,8))
+            clahe = cv2.createCLAHE(clipLimit=255.0, tileGridSize=(8,8))
             res = clahe.apply(self.disparity.astype(np.uint16))
             self.set_view(res)
 
