@@ -57,6 +57,8 @@ class Reconstruction3dGUI(QMainWindow, Ui_MainWindow):
         self.disp_max_diff = 1
         self.spakle_range = 5
 
+        self.algo = "sgbm"
+
         self.set_validators()
         self.bindActions()
 
@@ -81,6 +83,17 @@ class Reconstruction3dGUI(QMainWindow, Ui_MainWindow):
         self.viewTypeCombo.currentIndexChanged.connect(self.switch_view)
         self.defaultButton.clicked.connect(self.restore_default_values)
         self.generatePLYButton.clicked.connect(self.generatePLY)
+
+        self.sgbmButton.clicked.connect(self.useSGBM)
+        self.bmButton.clicked.connect(self.useBM)
+
+    def useSGBM(self):
+        self.algo = "sgbm"
+        print("sgbm")
+    
+    def useBM(self):
+        self.algo = "bm"
+        print("bm")
 
     def generatePLY(self):
         if self.disparity is None or self.calib_file is None or self.ply_out_path is None:
@@ -211,7 +224,7 @@ class Reconstruction3dGUI(QMainWindow, Ui_MainWindow):
         result = reconstruction_3d(self.img_l_name, self.img_r_name,
                                    self.n_features, self.sigma, self.edge, self.contrast, self.layers,
                                    self.matcher_threshold, self.win_size, self.sgbm_block_size, self.ratio,
-                                   self.disp_max_diff, self.spakle_range)
+                                   self.disp_max_diff, self.spakle_range, algo=self.algo)
         
         self.workInProgressLabel.setPixmap(QtGui.QPixmap(os.getcwd() + '/icons/green.png'))
 

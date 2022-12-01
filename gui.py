@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+    # -*- coding: utf-8 -*-
 
 # Form implementation generated from reading ui file '.\stereovision.ui'
 #
@@ -46,6 +46,16 @@ class Ui_MainWindow(object):
         self.label_3 = QtWidgets.QLabel(self.verticalLayoutWidget)
         self.label_3.setObjectName("label_3")
         self.form.addWidget(self.label_3)
+
+        # sgbm and bm
+        self.sgbmButton = QtWidgets.QPushButton(self.verticalLayoutWidget)
+        self.sgbmButton.setObjectName("sgbmButton")
+        self.leftFileSelection.addWidget(self.sgbmButton)
+
+        self.bmButton = QtWidgets.QPushButton(self.verticalLayoutWidget)
+        self.bmButton.setObjectName("bmButton")
+        self.leftFileSelection.addWidget(self.bmButton)
+
         self.siftParamsList = QtWidgets.QFormLayout()
         self.siftParamsList.setObjectName("siftParamsList")
         self.label_2 = QtWidgets.QLabel(self.verticalLayoutWidget)
@@ -197,6 +207,10 @@ class Ui_MainWindow(object):
         self.loadFileButton.setText(_translate("MainWindow", "Load Images"))
         self.label_3.setText(_translate("MainWindow", "<html><head/><body><p><span style=\" font-size:10pt; font-weight:600;\">SIFT Parameters:</span></p></body></html>"))
         self.label_2.setText(_translate("MainWindow", "<html><head/><body><p><span style=\" font-size:10pt;\">Edge threshold</span></p></body></html>"))
+
+        self.sgbmButton.setText(_translate("MainWindow", "Use SGBM"))
+        self.bmButton.setText(_translate("MainWindow", "Use BM"))
+
         self.edgeThresholdEdit.setText(_translate("MainWindow", "10"))
         self.label_4.setText(_translate("MainWindow", "<html><head/><body><p><span style=\" font-size:10pt;\">Sigma</span></p></body></html>"))
         self.sigmaSiftEdit.setToolTip(_translate("MainWindow", "<html><head/><body><p>Default None</p></body></html>"))

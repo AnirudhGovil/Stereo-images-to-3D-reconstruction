@@ -166,6 +166,31 @@ def sgbm_disparity_compute(img_l, img_r, win_size, block_size, ratio, disp_max_d
 
     return filtered_img
 
+def bm_disparity_compute(img_l, img_r, win_size, block_size, ratio, disp_max_diff, sp_range):
+
+    window_size = 3
+
+    left_matcher = cv2.StereoBM_create( numDisparities=96,
+                                        blockSize=block_size)
+
+    right_matcher = cv2.ximgproc.createRightMatcher(left_matcher)
+
+    # FILTER Parameters
+    lmbda = 80000
+    sigma = 1.2
+
+    wls_filter = cv2.ximgproc.createDisparityWLSFilter(matcher_left=left_matcher)
+    wls_filter.setLambda(lmbda)
+    wls_filter.setSigmaColor(sigma)
+
+    displ = left_matcher.compute(img_l, img_r)  
+    dispr = right_matcher.compute(img_r, img_l)
+    displ = np.int16(displ)
+    dispr = np.int16(dispr)
+    filtered_img = wls_filter.filter(displ, img_l, None, dispr)
+
+    return filtered_img
+
 def write_ply(file_name, verts, colors):
     ''' function to write a ply file '''
 
@@ -182,7 +207,7 @@ def write_ply(file_name, verts, colors):
 
 def reconstruction_3d(img_l_path, img_r_path,
                       sift_n_features, sift_sigma, edge, contrast, layers, threshold,
-                      win_size, block_size, ratio, disp_max_diff, sp_range):
+                      win_size, block_size, ratio, disp_max_diff, sp_range, algo: str):
 
     ''' Reconstruct a 3D scene from stereo image pairs. '''
 
@@ -224,8 +249,15 @@ def reconstruction_3d(img_l_path, img_r_path,
     img_r_rect = cv2.warpPerspective(img_r, h_2, (width, height))
 
     # calculate disparity map and apply post-filtering operation
-    disparity = sgbm_disparity_compute(img_l_rect, img_r_rect, win_size, block_size,
-                                       ratio, disp_max_diff, sp_range)
+    if(algo == 'sgbm'):
+        disparity = sgbm_disparity_compute(img_l_rect, img_r_rect, win_size, block_size,
+                                        ratio, disp_max_diff, sp_range)
+    elif(algo == 'bm'):
+        disparity = bm_disparity_compute(img_l_rect, img_r_rect, win_size, block_size,
+                                            ratio, disp_max_diff, sp_range)
+    else:
+        print("Algo error")
+        assert(0)    
 
     return img_l, img_r, img_l_ep, img_r_ep, img_l_rect, img_r_rect, disparity
 
